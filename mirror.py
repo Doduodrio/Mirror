@@ -177,7 +177,7 @@ async def on_message(message):
       await nodeA.channel.send('*(Message couldn\'t be displayed)*')
 
 @client.event
-async def on_typing(channel, user):
+async def on_typing(channel, user, when):
   global nodeA, nodeB
   # do not respond to self typing
   if user.discriminator != '0':
