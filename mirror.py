@@ -192,6 +192,10 @@ async def on_typing(channel, user, when):
     print('\n' + f'{now()} [B] {user} is typing...')
     await nodeA.channel.typing()
 
+@client.event
+async def on_disconnect():
+  print('\n' + f'{now()} Connection failed.')
+
 @tree.command(description='Set this location as a node')
 @app_commands.describe(node='The node to replace')
 @app_commands.rename(node='node_to_replace')
