@@ -93,7 +93,7 @@ def validate(i: discord.Interaction) -> bool:
   return False
 def get_logtime() -> str:
   time = datetime.datetime.now()
-  date = [time.year, time.month, time.day + (-1 if (time.hour-7)%24 > time.hour else 0), (time.hour-7)%24, time.minute, time.second]
+  date = [time.year, time.month, time.day, time.hour%24, time.minute, time.second]
   for i in range(len(date)):
     date[i] = str(date[i])
     if len(date[i])==1: date[i] = '0' + date[i]
@@ -113,6 +113,7 @@ async def on_ready():
   guilds = '\n - '.join([f'{guild.name} (id: {guild.id})' for guild in client.guilds])
   print('\n' + f'{client.user} is active in the following guilds:')
   print(f' - {guilds}\n')
+  print('\n' + f'It is currently {get_logtime()}.')
   # to default connect to a DMChannel, use Node(client.get_user(id))
   # to default connect to a TextChannel, use Node(client.get_channel(id))
   if not public: # connect to these channels for testing
