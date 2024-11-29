@@ -67,6 +67,8 @@ async def connected():
   await nodeA.channel.send(f'🪞 Connection established with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞 Connection established with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
   print(f'🪞  Connection established with user {nodeB.name} 🪞' if nodeB.isDM else f'🪞  Connection established with channel {nodeB.name} in server {nodeB.guild} 🪞')
   await nodeB.channel.send(f'🪞 Connection established with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Connection established with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
+  await nodeA.set_permissions(nodeA.guild.default_role, send_messages=True)
+  await nodeB.set_permissions(nodeB.guild.default_role, send_messages=True)
 def fromNode(channel, user) -> str:
   if isinstance(channel, discord.channel.DMChannel): # from DMChannel
     if user.name == nodeA.name:
@@ -241,5 +243,10 @@ async def set_as_node_error(i: discord.Interaction, error):
 async def kill(i: discord.Interaction):
   disconnect_message()
   await i.response.send_message('Connection severed.', ephemeral=True)
+
+@tree.command(description='Establish connection between nodes and enable speaking for both nodes')
+async def connect(i: discord.Interaction):
+  connected()
+  await i.response.send_message('Connection established.', ephemeral=True)
 
 client.run(TOKEN)
