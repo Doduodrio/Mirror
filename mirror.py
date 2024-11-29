@@ -8,6 +8,8 @@ import typing
 import discord
 from discord import app_commands
 
+from disconnect import disconnect_message
+
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
 
@@ -234,5 +236,10 @@ async def set_as_node_error(i: discord.Interaction, error):
 #   else:
 #     print('\n' + f'{now()} [{i.user.name}] Could not set {user} as a node.')
 #     await i.response.send_message(f'**[ERROR]** Could not set `{user}` as a node.', ephemeral=True)
+
+@tree.command(description='Sever connection between nodes and mute both nodes')
+async def kill(i: discord.Interaction):
+  disconnect_message()
+  await i.response.send_message('Connection severed.', ephemeral=True)
 
 client.run(TOKEN)
