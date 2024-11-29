@@ -8,8 +8,6 @@ import typing
 import discord
 from discord import app_commands
 
-from disconnect import disconnect_message
-
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
 
@@ -69,6 +67,14 @@ async def connected():
   await nodeB.channel.send(f'🪞 Connection established with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Connection established with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
   await nodeA.set_permissions(nodeA.guild.default_role, send_messages=True)
   await nodeB.set_permissions(nodeB.guild.default_role, send_messages=True)
+async def disconnect_message():
+    print()
+    print(f'🪞  Severing connection with user {nodeA.name} 🪞' if nodeA.isDM else f'🪞  Severing connection with channel {nodeA.name} in server {nodeA.guild} 🪞')
+    await nodeA.channel.send(f'🪞  Severing connection with user {nodeA.name} 🪞' if nodeA.isDM else f'🪞  Severing connection with channel {nodeA.name} in server {nodeA.guild} 🪞')
+    print(f'🪞  Severing connection with user {nodeB.name} 🪞' if nodeB.isDM else f'🪞  Severing connection with channel {nodeB.name} in server {nodeB.guild} 🪞')
+    await nodeB.channel.send(f'🪞 Severing connection with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Severing connection with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
+    await nodeA.set_permissions(nodeA.guild.default_role, send_messages=False)
+    await nodeB.set_permissions(nodeB.guild.default_role, send_messages=False)
 def fromNode(channel, user) -> str:
   if isinstance(channel, discord.channel.DMChannel): # from DMChannel
     if user.name == nodeA.name:
