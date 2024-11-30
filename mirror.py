@@ -65,16 +65,16 @@ async def connected():
   await nodeA.channel.send(f'🪞 Connection established with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞 Connection established with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
   print(f'🪞  Connection established with user {nodeB.name} 🪞' if nodeB.isDM else f'🪞  Connection established with channel {nodeB.name} in server {nodeB.guild} 🪞')
   await nodeB.channel.send(f'🪞 Connection established with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Connection established with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
-  await nodeA.set_permissions(nodeA.guild.default_role, send_messages=True)
-  await nodeB.set_permissions(nodeB.guild.default_role, send_messages=True)
+  await nodeA.channel.set_permissions(nodeA.guild.default_role, send_messages=True)
+  await nodeB.channel.set_permissions(nodeB.guild.default_role, send_messages=True)
 async def disconnect_message():
-    print()
-    print(f'🪞  Severing connection with user {nodeA.name} 🪞' if nodeA.isDM else f'🪞  Severing connection with channel {nodeA.name} in server {nodeA.guild} 🪞')
-    await nodeA.channel.send(f'🪞  Severing connection with user {nodeA.name} 🪞' if nodeA.isDM else f'🪞  Severing connection with channel {nodeA.name} in server {nodeA.guild} 🪞')
-    print(f'🪞  Severing connection with user {nodeB.name} 🪞' if nodeB.isDM else f'🪞  Severing connection with channel {nodeB.name} in server {nodeB.guild} 🪞')
-    await nodeB.channel.send(f'🪞 Severing connection with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Severing connection with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
-    await nodeA.set_permissions(nodeA.guild.default_role, send_messages=False)
-    await nodeB.set_permissions(nodeB.guild.default_role, send_messages=False)
+  print()
+  print(f'🪞  Severing connection with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞  Severing connection with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
+  await nodeA.channel.send(f'🪞  Severing connection with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞  Severing connection with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
+  print(f'🪞  Severing connection with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞  Severing connection with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
+  await nodeB.channel.send(f'🪞 Severing connection with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Severing connection with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
+  await nodeA.channel.set_permissions(nodeA.guild.default_role, send_messages=False)
+  await nodeB.channel.set_permissions(nodeB.guild.default_role, send_messages=False)
 def fromNode(channel, user) -> str:
   if isinstance(channel, discord.channel.DMChannel): # from DMChannel
     if user.name == nodeA.name:
@@ -98,7 +98,7 @@ def now() -> str: #returns current timestamp in [hh:mm:ss] format
     if len(date[i])==1: date[i] = '0' + date[i]
   return f'[{date[0]}:{date[1]}:{date[2]}]'
 def validate(i: discord.Interaction) -> bool:
-  if i.user.id in [i.guild_owner.id, 587040390603866122]:
+  if i.user.id in [i.guild.owner.id, 587040390603866122]:
     return True
   return False
 def get_logtime() -> str:
@@ -123,7 +123,7 @@ async def on_ready():
   guilds = '\n - '.join([f'{guild.name} (id: {guild.id})' for guild in client.guilds])
   print('\n' + f'{client.user} is active in the following guilds:')
   print(f' - {guilds}\n')
-  print('\n' + f'It is currently {get_logtime()}.')
+  print(f'It is currently {get_logtime()}.' + '\n')
   # to default connect to a DMChannel, use Node(client.get_user(id))
   # to default connect to a TextChannel, use Node(client.get_channel(id))
   if not public: # connect to these channels for testing
@@ -248,7 +248,7 @@ async def set_as_node_error(i: discord.Interaction, error):
 @tree.command(description='Sever connection between nodes and mute both nodes')
 @app_commands.check(validate)
 async def kill(i: discord.Interaction):
-  disconnect_message()
+  await disconnect_message()
   await i.response.send_message('Connection severed.', ephemeral=True)
 @kill.error
 async def kill_error(i: discord.Interaction, error):
@@ -258,7 +258,7 @@ async def kill_error(i: discord.Interaction, error):
 @tree.command(description='Establish connection between nodes and enable speaking for both nodes')
 @app_commands.check(validate)
 async def connect(i: discord.Interaction):
-  connected()
+  await connected()
   await i.response.send_message('Connection established.', ephemeral=True)
 @connect.error
 async def connect_error(i: discord.Interaction, error):
