@@ -257,22 +257,22 @@ async def set_as_node_error(i: discord.Interaction, error):
 #     print('\n' + f'{now()} [{i.user.name}] Could not set {user} as a node.')
 #     await i.response.send_message(f'**[ERROR]** Could not set `{user}` as a node.', ephemeral=True)
 
-@tree.command(description='Sever connection between nodes and mute both nodes')
-async def kill(i: discord.Interaction):
-  await disconnect_message()
-  await i.response.send_message('Connection severed.', ephemeral=True)
-  print(f'{now()} [{i.user.name}] Severed connection between nodes (id: {i.user.id}, guild owner: {i.user.id==i.guild.owner.id})')
+# @tree.command(description='Sever connection between nodes and mute both nodes')
+# async def kill(i: discord.Interaction):
+#   await disconnect_message()
+#   await i.response.send_message('Connection severed.', ephemeral=True)
+#   print(f'{now()} [{i.user.name}] Severed connection between nodes (id: {i.user.id}, guild owner: {i.user.id==i.guild.owner.id})')
 # @kill.error
 # async def kill_error(i: discord.Interaction, error):
 #   print('\n' + f'{now()} [{i.user.name}] Tried to kill connection without permission. (id: {i.user.id})')
 #   await i.response.send_message('**[ERROR]** You don\'t have permission to use this command!', ephemeral=True)
 
-@tree.command(description='Establish connection between nodes and enable speaking for both nodes')
-@app_commands.check(validate)
-async def connect(i: discord.Interaction):
-  await connected()
-  await i.response.send_message('Connection established.', ephemeral=True)
-  print(f'{now()} [{i.user.name}] Established connection between nodes (id: {i.user.id}, guild owner: {i.user.id==i.guild.owner.id})')
+# @tree.command(description='Establish connection between nodes and enable speaking for both nodes')
+# @app_commands.check(validate)
+# async def connect(i: discord.Interaction):
+#   await connected()
+#   await i.response.send_message('Connection established.', ephemeral=True)
+#   print(f'{now()} [{i.user.name}] Established connection between nodes (id: {i.user.id}, guild owner: {i.user.id==i.guild.owner.id})')
 # @connect.error
 # async def connect_error(i: discord.Interaction, error):
 #   print('\n' + f'{now()} [{i.user.name}] Tried to establish connection without permission.')
