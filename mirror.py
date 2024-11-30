@@ -65,16 +65,28 @@ async def connected():
   await nodeA.channel.send(f'🪞 Connection established with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞 Connection established with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
   print(f'🪞  Connection established with user {nodeB.name} 🪞' if nodeB.isDM else f'🪞  Connection established with channel {nodeB.name} in server {nodeB.guild} 🪞')
   await nodeB.channel.send(f'🪞 Connection established with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Connection established with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
-  await nodeA.channel.set_permissions(nodeA.guild.default_role, send_messages=True)
-  await nodeB.channel.set_permissions(nodeB.guild.default_role, send_messages=True)
+  try:
+    await nodeA.channel.set_permissions(nodeA.guild.default_role, send_messages=True)
+  except:
+    print('Could not unmute node A')
+  try:
+    await nodeB.channel.set_permissions(nodeB.guild.default_role, send_messages=True)
+  except:
+    print('Could not unmute node B')
 async def disconnect_message():
   print()
   print(f'🪞  Severing connection with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞  Severing connection with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
   await nodeA.channel.send(f'🪞  Severing connection with user `{nodeB.name}` 🪞' if nodeB.isDM else f'🪞  Severing connection with channel `{nodeB.name}` in server `{nodeB.guild}` 🪞')
   print(f'🪞  Severing connection with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞  Severing connection with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
   await nodeB.channel.send(f'🪞 Severing connection with user `{nodeA.name}` 🪞' if nodeA.isDM else f'🪞 Severing connection with channel `{nodeA.name}` in server `{nodeA.guild}` 🪞')
-  await nodeA.channel.set_permissions(nodeA.guild.default_role, send_messages=False)
-  await nodeB.channel.set_permissions(nodeB.guild.default_role, send_messages=False)
+  try:
+    await nodeA.channel.set_permissions(nodeA.guild.default_role, send_messages=False)
+  except:
+    print('Could not mute node A')
+  try:
+    await nodeB.channel.set_permissions(nodeB.guild.default_role, send_messages=False)
+  except:
+    print('Could not mute node B')
 def fromNode(channel, user) -> str:
   if isinstance(channel, discord.channel.DMChannel): # from DMChannel
     if user.name == nodeA.name:
@@ -246,23 +258,24 @@ async def set_as_node_error(i: discord.Interaction, error):
 #     await i.response.send_message(f'**[ERROR]** Could not set `{user}` as a node.', ephemeral=True)
 
 @tree.command(description='Sever connection between nodes and mute both nodes')
-@app_commands.check(validate)
 async def kill(i: discord.Interaction):
   await disconnect_message()
   await i.response.send_message('Connection severed.', ephemeral=True)
-@kill.error
-async def kill_error(i: discord.Interaction, error):
-  print('\n' + f'{now()} [{i.user.name}] Tried to kill connection without permission.')
-  await i.response.send_message('**[ERROR]** You don\'t have permission to use this command!', ephemeral=True)
+  print(f'{now()} [{i.user.name}] Severed connection between nodes (id: {i.user.id}, guild owner: {i.user.id==i.guild.owner.id})')
+# @kill.error
+# async def kill_error(i: discord.Interaction, error):
+#   print('\n' + f'{now()} [{i.user.name}] Tried to kill connection without permission. (id: {i.user.id})')
+#   await i.response.send_message('**[ERROR]** You don\'t have permission to use this command!', ephemeral=True)
 
 @tree.command(description='Establish connection between nodes and enable speaking for both nodes')
 @app_commands.check(validate)
 async def connect(i: discord.Interaction):
   await connected()
   await i.response.send_message('Connection established.', ephemeral=True)
-@connect.error
-async def connect_error(i: discord.Interaction, error):
-  print('\n' + f'{now()} [{i.user.name}] Tried to establish connection without permission.')
-  await i.response.send_message('**[ERROR]** You don\'t have permission to use this command!', ephemeral=True)
+  print(f'{now()} [{i.user.name}] Established connection between nodes (id: {i.user.id}, guild owner: {i.user.id==i.guild.owner.id})')
+# @connect.error
+# async def connect_error(i: discord.Interaction, error):
+#   print('\n' + f'{now()} [{i.user.name}] Tried to establish connection without permission.')
+#   await i.response.send_message('**[ERROR]** You don\'t have permission to use this command!', ephemeral=True)
 
 client.run(TOKEN)
