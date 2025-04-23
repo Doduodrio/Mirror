@@ -95,7 +95,7 @@ def validate(i: discord.Interaction) -> bool:
   return False
 def get_logtime() -> str:
   time = datetime.datetime.now()
-  date = [time.year, time.month, time.day, time.hour%24, time.minute, time.second]
+  date = [time.year, time.month, time.day, time.hour, time.minute, time.second]
   for i in range(len(date)):
     date[i] = str(date[i])
     if len(date[i])==1: date[i] = '0' + date[i]
