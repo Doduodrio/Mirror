@@ -35,7 +35,7 @@ def print(*args, **kwargs):
   if not logging:
     return
   # log 2024-01-01 00.00.00.txt
-  with open(f'logs/log {logtime}.txt', 'a') as log:
+  with open(f'logs/log {logtime}.txt', 'a', encoding='utf-8') as log:
     print_copy(*args, file=log, **kwargs)
 
 # other functions
